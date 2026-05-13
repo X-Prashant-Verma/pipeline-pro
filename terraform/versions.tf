@@ -15,6 +15,12 @@ terraform {
       version = "~> 2.0"
     }
   }
+
+  backend "s3" {
+    bucket = "pipeline-pro-tfstate-492052863906-ap-south-1-an"
+    key    = "terraform.tfstate"
+    region = "ap-south-1"
+  }
 }
 
 provider "aws" {
