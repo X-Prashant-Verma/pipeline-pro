@@ -77,3 +77,53 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve
+
+      - name: Save EC2 IP
+        run: terraform output -raw ec2_public_ip > ec2_ip.txt
+
+      - name: Upload EC2 IP artifact
+        uses: actions/upload-artifact@v4
+        with:
+            name: ec2-ip
+            path: terraform/ec2_ip.txt
+        
+      - name: Save private key
+        run: cp ec2-private-key.pem ../ec2-private-key.pem
+
+      - name: Upload private key artifact
+        uses: actions/upload-artifact@v4
+        with:
+            name: ec2-private-key
+            path: ec2-private-key.pem  
+
+  deploy:
+    needs: terraform-apply
+    runs-on: ubuntu-latest
+    name: Deploy the Flask Image on the EC2 instance
+    steps:
+      - name: Check out source repository
+        uses: actions/checkout@v4
+        
+      - name: Download EC2 IP Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ec2-ip
+          path: .
+      
+      - name: Download EC2 Private Key Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ec2-private-key
+          path: .
+          
+      - name: Set chmod 400 for private key
+        run: chmod 400 ec2-private-key.pem
+     
+      - name: SSH into EC2
+        run: |
+          ssh -i ec2-private-key.pem -o StrictHostKeyChecking=no ubuntu@$(cat ec2_ip.txt) "
+          sudo apt-get update -y &&
+          sudo apt-get install -y docker.io &&
+          sudo docker pull ghcr.io/x-prashant-verma/pipeline-pro:latest &&
+          sudo docker run -d -p 80:5000 ghcr.io/x-prashant-verma/pipeline-pro:latest
+          "      
