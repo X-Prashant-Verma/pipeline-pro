@@ -73,7 +73,7 @@ All AWS resources are defined as code in `/terraform`:
 - **Public Subnet** in `ap-south-1a`
 - **Internet Gateway** attached to the VPC
 - **Route Table** routing `0.0.0.0/0` through the IGW
-- **Security Group** allowing SSH (port 22, restricted to `my-ip`) and HTTP (port 80, open)
+- **Security Group** allowing SSH (port 22) and HTTP (port 80, open)
 - **EC2 Instance** (Amazon Linux 2) with a key pair for SSH access
 
 Provision infrastructure:
@@ -122,7 +122,7 @@ On every push to `main`, the workflow:
 | Secret | Description |
 |---|---|
 | `AWS_ACCESS_KEY_ID` | AWS Access Key ID |
-| `AWS_SECRET_ACCESS_KEY` | AWS Secret Key |
+| `AWS_SECRET_ACCESS_KEY` | AWS Secret Access Key |
 
 ---
 
