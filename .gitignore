@@ -1,0 +1,13 @@
+# Terraform
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/ec2-private-key.pem
+
+# Python
+__pycahce__/
+*.pyc
+
+# OS
+.DS_Store
