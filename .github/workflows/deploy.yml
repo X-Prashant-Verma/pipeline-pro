@@ -126,4 +126,4 @@ jobs:
           sudo apt-get install -y docker.io &&
           sudo docker pull ghcr.io/x-prashant-verma/pipeline-pro:latest &&
           sudo docker run -d -p 80:5000 ghcr.io/x-prashant-verma/pipeline-pro:latest
-          "      
+          " 
